@@ -1,0 +1,507 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+template<typename... T>
+void see(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void put(T&&... args) { ((cout << args << " "), ...);}
+template<typename... T>
+void putl(T&&... args) { ((cout << args << " "), ...); cout<<'\n';}
+#define seea(a,x,y) for(int i=x;i<y;i++){cin>>a[i];}
+#define inputv(v,n) for(int i=0;i<n;i++){int x; cin>>x; v.push_back(x);}
+#define outputv(v,n) for(int i=0;i<n;i++){cout<<v[i]<<" ";}
+#define sees(s,n) for(int i=0;i<n;i++){int x; cin>>x; s.insert(x);}
+#define all(x) x.begin(),x.end()
+#define rep(i,a,b) for (int i=a; i<b; ++i)
+#define rev(i,a,b) for (int i=a; i>b; --i)
+#define pb push_back
+#define ar array
+typedef long long int ll;
+typedef pair<int,int> pi;
+typedef pair<int,ll> pl;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+const int MAXN=2e5+5;
+const ll INF = LLONG_MAX;
+const int MOD=1e9+7;
+
+struct  TreeNode
+{
+	int val;
+	TreeNode* left;
+	TreeNode* right;
+
+	TreeNode(int a){
+		val=a;
+		left=NULL;right=NULL;
+	}
+
+	TreeNode(int a,TreeNode* b,TreeNode* c){
+		val=a;left=b;right=c;
+	}
+
+};
+struct  Node
+{
+	int val;
+	Node* left;
+	Node* right;
+
+	Node(int a){
+		val=a;
+		left=NULL;right=NULL;
+	}
+
+	Node(int a,Node* b,Node* c){
+		val=a;left=b;right=c;
+	}
+
+};
+
+
+void dfs1(TreeNode* node,vector<int>& ans){
+	if(node == NULL) return;
+	dfs1(node->left,ans);
+	ans.push_back(node->val);
+	dfs1(node->right,ans);
+}
+
+// vector<int> inorderTraversal(TreeNode* root) {
+// 	vector<int> ans;
+// 	dfs1(root,ans);
+// 	return ans;
+// }
+vector<int> inorderTraversal(TreeNode* root) {
+	vector<int> ans;
+	if(root==NULL) return ans;
+	TreeNode* curr=root;
+	while(curr){
+		if(!curr->left){
+			ans.push_back(curr->val);
+			curr=curr->right;
+		}else{
+			TreeNode* prev=curr->left;
+			while(prev->right && prev->right!=curr){
+				prev=prev->right;
+			}
+			if(!prev->right){
+				ans.push_back(curr->val);
+				prev->right=curr;
+				curr=curr->left;
+			}else{
+				prev->right=NULL;
+				curr=curr->right;
+			}
+		}
+
+	}
+	// outputv(ans,ans.size());
+	return ans;
+}
+
+void dfs2(TreeNode* node,vector<int>& ans){
+	if(node == NULL) return;
+	ans.push_back(node->val);
+	dfs2(node->left,ans);
+	dfs2(node->right,ans);
+
+}
+vector<int> preorderTraversal(TreeNode* root) {
+	vector<int> ans;
+	dfs2(root,ans);
+	return ans; 
+}
+void dfs3(TreeNode* node,vector<int>& ans){
+	if(node == NULL) return;
+	dfs3(node->left,ans);
+	dfs3(node->right,ans);
+	ans.push_back(node->val);
+}
+
+vector<int> postorderTraversal(TreeNode* root) {
+	vector<int> ans;
+	dfs3(root,ans);
+	outputv(ans,ans.size());
+	return ans;      
+
+}
+
+// void dfs4(Node* node,vector<int> &ans,int level){
+// 	if(node==NULL) return;
+// 	if(level==ans.size()) ans.push_back(node->data);
+// 	dfs(node->right,ans,level+1);
+// 	dfs(node->left,ans,level+1);
+// }
+
+// vector<int> leftView(Node *root){
+
+// }
+vector<vector<int>> levelOrder(TreeNode* root) {
+	vector<vector<int>> ans;
+	queue<TreeNode*> q;
+	q.push(root);
+	while(!q.empty()){
+		int n=q.size();
+		vector<int> a;
+		for(int i=0;i<n;i++){
+			TreeNode* temp=q.front();
+			q.pop();
+			if(i==0) a.push_back(temp->val);
+			if(temp->left) q.push(temp->left);
+			if(temp->right) q.push(temp->right);
+		}
+		ans.push_back(a);
+	}
+	// for(auto x:ans){
+	// 	for(auto y:x){
+	// 		cout<<y<<" ";
+	// 	}
+	// 	cout<<endl;
+	// }
+	return ans;
+        
+}
+
+int maxDepth(TreeNode* root) {
+	if(root==NULL) return 0;
+	int left = maxDepth(root->left);
+	int right = maxDepth(root->right);
+	return 1+max(left,right);        
+}
+
+int maxDiameter(TreeNode* node,int& maxi){
+	if(!node) return 0;
+	int left =maxDiameter(node->left,maxi);
+	int right = maxDiameter(node->right,maxi);
+	maxi = max(maxi,1+left+right);
+	return max(left,right)+1;
+}
+
+int diameterOfBinaryTree(TreeNode* root) {
+	int maxi=INT_MIN;
+	maxDiameter(root,maxi);
+	return maxi;
+}
+
+int height(TreeNode* node){
+	if(!node) return 0;
+	int left = height(node->left);
+	if(left==-1) return -1;
+	int right = height(node->right);
+	if(right==-1) return -1;
+	if(abs(left-right)>1) return -1; 
+	return max(left,right)+1;
+
+}
+
+bool isBalanced(TreeNode* root) {
+	bool ans=(height(root)!=-1);
+	return ans;
+}
+
+TreeNode* ancestor(TreeNode* node,TreeNode* p,TreeNode* q,TreeNode* & ans){
+	// cout<<"jani"<<endl;
+	if(node==NULL) return NULL;
+	// cout<<node->val<<endl;
+	TreeNode* left = ancestor(node->left,p,q,ans);
+	// if(left) cout<<left->val<<endl;
+	// else cout<<"left null"<<endl;
+	if(ans) return NULL;
+	TreeNode* right = ancestor(node->right,p,q,ans);
+	// if(right) cout<<right->val<<endl;
+	// else cout<<"right null"<<endl;
+	if(ans) return NULL;
+	if(node==q){
+		if(left==p || right==p){ans = node;} 
+		return node;
+	}
+	if(node==p){
+		if(left==q || right==q) {ans=node;}
+		return node;
+	}
+	if(left && right) {ans= node;return NULL;}
+	if(left!=NULL) return left;
+	else if(right!=NULL) return right;
+	else return NULL;
+}
+
+TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+	TreeNode* ans=NULL;
+	TreeNode* sol = ancestor(root,p,q,ans);
+	return ans;
+}
+
+bool isSameTree(TreeNode* p, TreeNode* q) {
+	if(p==NULL && q==NULL) return true;
+	if(p==NULL || q==NULL) return false;
+	bool left = isSameTree(p->left,q->left);
+	bool right = isSameTree(p->right,q->right);
+	return left && right && (p->val == q->val);
+}
+
+vector<vector<int>> zigzagLevelOrder(TreeNode* root) {
+    vector<vector<int>> ans;
+    queue<TreeNode*> q;
+    q.push(root);
+    bool flag= false;
+    while(!q.empty()){
+    	int n=q.size();
+    	flag = ! flag;
+    	vector<int> row(n);
+    	for(int i=0;i<n;i++){
+    		TreeNode* curr = q.front();
+    		q.pop(); 
+    		int index = (flag) ? i : (n-1-i);
+    		row[index] = curr->val;
+    		if(curr->left) q.push(curr->left);
+    		if(curr->right) q.push(curr->right);
+    	}
+    	ans.push_back(row);
+    }
+    return ans;
+}
+
+int sum(TreeNode* node,int & ans){
+	if(!node) return 0;
+	int left = max(0,sum(node->left,ans));
+	int right = max(0,sum(node->right,ans));
+	ans = max(ans,left+right+node->val);
+	return node->val + max(left,right);
+}
+
+int maxPathSum(TreeNode* root) {
+	 int ans =INT_MIN;
+	 sum(root,ans);
+	 return ans;
+}
+
+vector<vector<int>> verticalTraversal(TreeNode* root) {
+	vector<vector<int>> ans;
+	map<int,map<int,multiset<int>>> m;
+	queue<pair<TreeNode*,pair<int,int>>> q;
+	q.push({root,{0,0}});
+	while(!q.empty()){
+		pair<TreeNode*,pair<int,int>> curr = q.front();	
+		q.pop();
+		m[curr.second.first][curr.second.second].insert(curr.first->val);
+		if(curr.first->left) q.push({curr.first->left,{curr.second.first-1,curr.second.second+1}});
+		if(curr.first->right) q.push({curr.first->right,{curr.second.first+1,curr.second.second+1}});
+	}
+	for (auto p: m) {
+	vector < int > col;
+	for (auto q: p.second) {
+	  col.insert(col.end(), q.second.begin(), q.second.end());
+	}
+	ans.push_back(col);
+	}
+	return ans;
+}
+
+bool path (TreeNode* node,int B,vector<int> &ans){
+	if(node==NULL) return false;
+	ans.push_back(node->val);
+	if(node->val==B) return true;
+	if(path(node->left,B,ans)||path(node->right,B,ans)) return true;
+	ans.pop_back();
+	return false;
+}
+
+vector<int> findPath(TreeNode* A, int B) {
+    vector<int> ans;
+    path(A,B,ans);
+    return ans;
+}
+
+vector<int> topView(Node *root){
+	vector<int> ans;
+	if(!root) return ans;
+    map<int,int> mp;
+    queue<pair<Node*,int>> q;
+    q.push({root,0});
+    while(!q.empty()){
+    	Node* curr=q.front().first;
+    	int u=q.front().second;
+    	q.pop();
+    	mp[u]=curr->val;
+    	if(curr->left) q.push({curr->left,u-1});
+    	if(curr->right) q.push({curr->right,u+1});
+    }
+    for(auto p:mp){
+    	ans.push_back(p.second);
+    }
+    return ans;
+
+}
+int widthOfBinaryTree(TreeNode* root) {
+	int ans=0;
+	if(!root) return ans;
+	queue<pair<TreeNode*,int>> q;
+	ans++;
+	q.push({root,0});
+	while(!q.empty()){
+		int n=q.size();int a,b;
+		int curMin = q.front().second;
+		for(int i=0;i<n;i++){
+			TreeNode* curr = q.front().first;
+			int u= q.front().second-curMin;
+			// cout<<u<<endl;
+			q.pop();
+			if(n>=2) {
+				if(i==0) a=u;
+				if(i==n-1) b=u;
+			}
+			if(curr->left) q.push({curr->left,(long long)2*u+1});
+			if(curr->right) q.push({curr->right,(long long)2*u+2});
+		}
+		if(n>=2) ans=max(ans,b-a+1);
+	}
+	return ans;
+}
+
+bool symmetric(TreeNode* q,TreeNode* p){
+	if(p==NULL && q==NULL) return true;
+	if(p==NULL || q==NULL) return false;
+	if(!symmetric(q->left,p->right)||!symmetric(q->right,p->left)) return false;
+	return (p->val==q->val);
+}
+
+bool isSymmetric(TreeNode* root) {
+	if(!root) return true;
+	bool ans= symmetric(root->left,root->right);
+	return ans;
+}
+
+
+void mirror(Node* node) {
+	if(!node) return ;
+	mirror(node->left);
+	mirror(node->right);
+	swap(node->left,node->right);
+}
+
+// TreeNode* build(vector<int> &preorder,vector<int> &inorder,int l,int r,int& m){
+// 	if(l>r) return NULL;
+// 	int i=l;
+// 	while(i<=r){
+// 		if(inorder[i]==preorder[m]) break;
+// 		i++;
+// 	}
+// 	TreeNode* node= new TreeNode(inorder[i]);
+// 	m++;
+// 	node->left = build(preorder,inorder,l,i-1,m);
+// 	node->right = build(preorder,inorder,i+1,r,m);
+// 	return node;
+// }
+
+// TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+// 	int n=preorder.size();
+// 	TreeNode* root = build(preorder,inorder,0,n-1,0);
+// 	return root;
+// }
+
+
+TreeNode* build(vector<int> &preorder,vector<int> &inorder,int l,int r,int& m){
+	if(l>r) return NULL;
+	int i=l;
+	while(i<=r){
+		if(inorder[i]==preorder[m]) break;
+		i++;
+	}
+	TreeNode* node= new TreeNode(inorder[i]);
+	m--;
+	node->right = build(preorder,inorder,i+1,r,m);
+	node->left = build(preorder,inorder,l,i-1,m);
+	return node;
+}
+
+TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {
+	int n=inorder.size();int m=n-1;
+	TreeNode* root = build(inorder,postorder,0,n-1,m);
+	return root;
+}
+
+// void flatten(TreeNode* root) {
+// 	TreeNode* curr = root;
+//     stack<TreeNode*> st;
+//     st.push(curr);
+//     while(!st.empty()){
+//         curr=st.top();
+//         st.pop();
+//         cout<<curr->val<<endl;
+//         if(curr->right) st.push(curr->right);
+//         if(curr->left) st.push(curr->left);
+//         curr->left =NULL;
+//         if(!st.empty())curr->right=st.top();
+//         else curr->right=NULL;
+//     }
+// }
+// TreeNode* prev = NULL;
+// void flatten(TreeNode* root){
+// 	if(root==NULL) return;
+
+// 	flatten(root->right);
+// 	flatten(root->left);
+
+// 	root->right=prev;
+// 	root->left=NULL:
+// 	prev=root;
+
+// }
+
+void flatten(TreeNode* root){
+	TreeNode* curr=root;
+	stack<TreeNode*> st;
+	st.push(curr);
+	while(!s.empty()){
+		if(curr->left==NULL){
+			curr=curr->right;
+		}else{
+			TreeNode* prev=curr->left;
+			while(prev->right&&prev->right!=curr->right){
+				prev=prev->right;
+			}
+			prev-right = curr->right;
+			curr->right = curr->left;
+			curr->left =NULL:
+
+		}
+	}
+}
+
+
+
+void solve(){
+	TreeNode* a= new TreeNode(1);
+	TreeNode* b = new TreeNode(2);
+	TreeNode* c = new TreeNode(3);
+	TreeNode* d = new TreeNode(4);
+	TreeNode* e = new TreeNode(5);
+	TreeNode* f = new TreeNode(6);
+	TreeNode* g = new TreeNode(7);
+	TreeNode* h = new TreeNode(8);
+	TreeNode* i = new TreeNode(0);
+	c->right=a;
+	c->left=e;
+	e->left=f;
+	e->right=b;
+	a->left=i;
+	a->right=h;
+	b->left=g;
+	b->right=d;
+	// Node* a= new Node(1);
+	// Node* b = new Node(2);
+	// Node* c = new Node(3);
+	// a->right=b;
+	// b->left=c;
+	flatten(c);
+}
+
+int main(){
+	ios::sync_with_stdio(0);
+	cin.tie(0);cout.tie(0);
+	int t=1;
+	while(t--){
+		solve();
+	}
+	return 0;
+}
