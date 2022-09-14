@@ -505,3 +505,302 @@ int main(){
 	}
 	return 0;
 }
+
+#include<bits/stdc++.h>
+using namespace std;
+
+template<typename... T>
+void see(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void put(T&&... args) { ((cout << args << " "), ...);}
+template<typename... T>
+void putl(T&&... args) { ((cout << args << " "), ...); cout<<'\n';}
+#define seea(a,x,y) for(int i=x;i<y;i++){cin>>a[i];}
+#define inputv(v,n) for(int i=0;i<n;i++){int x; cin>>x; v.push_back(x);}
+#define outputv(v,n) for(int i=0;i<n;i++){cout<<v[i]<<" ";}
+#define sees(s,n) for(int i=0;i<n;i++){int x; cin>>x; s.insert(x);}
+#define all(x) x.begin(),x.end()
+#define rep(i,a,b) for (int i=a; i<b; ++i)
+#define rev(i,a,b) for (int i=a; i>b; --i)
+#define pb push_back
+#define ar array
+typedef long long int ll;
+typedef pair<int,int> pi;
+typedef pair<int,ll> pl;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+const int MAXN=2e5+5;
+const ll INF = LLONG_MAX;
+const int MOD=1e9+7;
+
+struct TreeNode {
+	int val;
+	TreeNode *left;
+	TreeNode *right;
+	TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+
+
+vector<int> topview(TreeNode* A) {
+	vector<int> ans;
+	if(!A) return ans;
+	queue<TreeNode*> q;
+	q.push(A);
+	while(!q.empty()){
+		int n=q.size();
+		for(int i=0;i<n;i++){
+			TreeNode* curr = q.front();
+			q.pop();
+			if(i==n-1) ans.push_back(curr);
+			if(curr->left) q.push(curr->left);
+			if(curr->right) q.push(curr->right);
+		}
+	}
+	return ans;
+}
+
+vector<int> cousins(TreeNode* A, int B) {
+    vector<int> ans;
+	if(!A) return ans;
+	queue<TreeNode*> q;
+	bool a=false;
+	q.push(A);
+	while(!q.empty()){
+		int n=q.size();
+		for(int i=0;i<n;i++){
+			TreeNode* curr = q.front();
+			q.pop();
+			if(curr->left){
+				if(curr->left->val == B) {
+					a=true;
+				}
+				else{
+					if(curr->right){
+						if(curr->right->val != B){
+							q.push(curr->left);
+							q.push(curr->right);
+						}else{
+							a=true;
+						}
+					}
+				}
+			}else{
+				if(curr->right) {
+					if(curr->right->val == B) a = true;
+					else q.push(curr->right);
+				}
+			}
+		}
+		if(a) break;
+	}
+	while(!q.empty()){
+		ans.push_back(q.front()->val);
+		q.pop();
+	}
+	return ans;
+}
+
+vector<int> reverseLevelOrder(TreeNode* A) {
+   vector<int> ans;
+   if(!A) return ans;
+   queue<TreeNode*> q;
+   q.push(A);
+   while(!q.empty()){
+   		TreeNode* curr = q.front();
+   		q.pop();
+   		ans.push_back(curr->val);
+   		if(curr->right) q.push(curr->right);
+   		if(curr->left) q.push(curr->left);
+   }
+   reverse(ans.begin(), ans.end());
+   return ans;
+}
+
+
+vector<vector<int> > zigzagLevelOrder(TreeNode* A) {
+    vector<vector<int>> ans;
+    if(!A) return ans;
+    queue<TreeNode*> q;
+    q.push(A);
+    bool flag = false;
+    while(!q.empty()){
+    	int n= q.size();
+    	flag = !flag;
+    	vector<int> row(n);
+    	for(int i=0;i<n;i++){
+    		int index = (flag) ? i : n-1-i;
+    		TreeNode* curr = q.front();
+    		q.pop();
+    		row[index] = curr->val;
+    		if(curr->left) q.push(curr->left);
+    		if(curr->right) q.push(curr->right);
+    	}
+    	ans.push_back(row);
+    }
+    return ans;
+}
+
+
+void preorder(TreeNode* node,int u,int v,map<int,map<int,multiset<int>>> &mp){
+	if(node==NULL) return ;
+	mp[u][v].insert(node->val);
+	preorder(node->left,u-1,v+1,mp);
+	preorder(node->right,u+1,v+1,mp);
+
+}
+
+vector<vector<int> > verticalOrderTraversal(TreeNode* A) {
+	map<int,map<int,multiset<int>>> mp;
+	vector<vector<int>> ans;
+	preorder(A,0,0,mp);
+	for (auto p: mp) {
+		vector < int > col;
+		for (auto q: p.second) {
+		  col.insert(col.end(), q.second.begin(), q.second.end());
+		}
+		ans.push_back(col);
+	}
+	return ans;
+}
+
+void preorder(TreeNode* node,int u,map<int,vector<int>> &mp){
+	if(node==NULL) return ;
+	mp[u].push_back(node->val);
+	preorder(node->left,u+1,mp);
+	preorder(node->right,u,mp);
+}
+
+vector<int> diagonalTraversal(TreeNode* A) {
+	vector<int> ans;
+	if(!A) return ans;
+	map<int,vector<int>> mp;
+	preorder(A,0,mp);
+	for(auto p:mp){
+		ans.insert(ans.end(),p.second.begin(),p.second.end());
+	}
+	return ans;
+}
+
+vector<int> verticalSum(TreeNode* A) {
+	map<int,int> mp;
+	vector<int> ans;
+	queue<pair<TreeNode*,int>> q;
+	q.push({A,0});
+	while(!q.empty()){
+		pair<TreeNode*,int> curr = q.front();
+		q.pop();
+		TreeNode* currNode = curr.first;
+		int u = curr.second;
+		mp[u]+=currNode->val;
+		if(currNode->left) q.push({currNode->left,u-1});
+		if(currNode->right) q.push({currNode->right,u+1});
+
+	}
+	for(auto p:mp){
+		ans.push_back(p.second);
+	}
+	return ans;
+}
+
+long coveredNodes(TreeNode* A) {
+	long cSum =0, unSum =0;
+	queue<TreeNode*> q;
+	q.push(A);
+	while(!q.empty()){
+		int n=q.size();
+		for(int i=0;i<n;i++){
+			TreeNode* curr = q.front();
+			q.pop();
+			if((i==0)||(i==n-1)) cSum+=curr->val;
+			else unSum+=curr->val;
+			if(curr->left) q.push(curr->left);
+			if(curr->right) q.push(curr->right);
+		}
+	}
+	return abs(cSum - unSum);
+}
+
+bool symmetric(TreeNode* q,TreeNode* p){
+	if(p==NULL && q==NULL) return true;
+	if(p==NULL || q==NULL) return false;
+	if(!symmetric(q->left,p->right)||!symmetric(q->right,p->left)) return false;
+	return (p->val==q->val);
+}
+
+bool isSymmetric(TreeNode* root) {
+	if(!root) return true;
+	bool ans= symmetric(root->left,root->right);
+	return ans;
+}
+
+TreeNode* mergeTrees(TreeNode* A, TreeNode* B) {
+	if((A==NULL)&&(B==NULL)) return NULL
+	if((A==NULL)||(B==NULL)) {
+		if(A) return A;
+		if(B) return B;
+	}
+	TreeNode* left = mergeTrees(A->left,B->left);
+	TreeNode* right = mergeTrees(A->right,B->right);
+	A->val+=B->val;
+	return A;
+} 
+
+int lastNode(TreeNode* A) {
+	queue<TreeNode*> q;
+	q.push(A);
+	TreeNode* last;
+	while(!q.empty()){
+		TreeNode* curr = q.front();
+		q.pop();
+		if(q.empty()) last = curr;
+		if(curr->left) q.push(curr->left);
+		if(curr->right) q.push(curr->right);
+	}
+	return last->val;
+}
+
+
+int Solution::solve(int A, vector<vector<int> > &B) {
+	vector<vector<int>> adj;
+	adj.resize(A+1);
+	for(auto x : B){
+		adj[x.first].push_back(x.second);
+	}
+	int sum=0;
+	for(int i=1;i<=A;i++){
+		sum+=adj[i].size();
+	}
+	sum-=A;
+	return (sum>>1);
+}
+
+
+void solve(){
+	TreeNode* a = new TreeNode(1);
+	TreeNode* b = new TreeNode(2);
+	TreeNode* c = new TreeNode(3);
+	TreeNode* d = new TreeNode(4);
+	TreeNode* e = new TreeNode(5);
+	TreeNode* f = new TreeNode(6);
+	TreeNode* g = new TreeNode(7);
+	a->left = b;
+	a->right = c;
+	b->left = d;
+	b->right = e;
+	c->left = f;
+	c->right = g;
+	int ans = lastNode(a);
+	cout<<ans<<endl;
+}
+
+
+int main(){
+	ios::sync_with_stdio(0);
+	cin.tie(0);cout.tie(0);
+	int t=1;
+	while(t--){
+		solve();
+	}
+	return 0;
+}
+
