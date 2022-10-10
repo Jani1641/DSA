@@ -1,0 +1,272 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+template<typename... T>
+void see(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void put(T&&... args) { ((cout << args << " "), ...);}
+template<typename... T>
+void putl(T&&... args) { ((cout << args << " "), ...); cout<<'\n';}
+#define seea(a,x,y) for(int i=x;i<y;i++){cin>>a[i];}
+#define inputv(v,n) for(int i=0;i<n;i++){int x; cin>>x; v.push_back(x);}
+#define outputv(v,n) for(int i=0;i<n;i++){cout<<v[i]<<" ";}
+#define sees(s,n) for(int i=0;i<n;i++){int x; cin>>x; s.insert(x);}
+#define all(x) x.begin(),x.end()
+#define rep(i,a,b) for (int i=a; i<b; ++i)
+#define rev(i,a,b) for (int i=a; i>b; --i)
+#define pb push_back
+#define ar array
+#define sz size
+#define rsz resize
+typedef long long int ll;
+typedef pair<int,int> pi;
+typedef pair<int,ll> pl;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+const int MAXN=2e5+5;
+const ll INF = LLONG_MAX;
+const int MOD=1e9+7;
+
+bool isValid(string st) {
+    stack<char> s;
+
+    for(auto x: st){
+        if((x=='[')||(x=='{')||(x=='(')) s.push(x);
+        else {
+            if(s.empty()) return false;
+            if((x==')')&&(s.top() =='(')) s.pop();
+            else if((x=='}')&&(s.top() =='{')) s.pop();
+            else if((x==']')&&(s.top() =='[')) s.pop();
+            else return false;
+        }
+    }
+    if(s.empty()) return true;
+    else return false;
+}
+
+vector<int> nextGreaterElements(vector<int>& arr) {
+    stack<int> st;
+    int n = arr.size();
+    vector<int> ans(n);
+    int a;
+    for(int i=2*n-1;i>=0;i--){
+        if(st.empty()) a= -1;
+        else{
+            while((!st.empty())&&(st.top()>=arr[i%n])) st.pop();
+            if(st.empty()) a= -1;
+            else a=st.top();
+        }
+        st.push(arr[i%n]);
+        if(i<(n)) ans[i]=a;
+    }
+    for(auto x: ans) cout<<x<<" ";
+    return ans;
+}
+vector<int> smallerElements(vector<int> &arr,bool check){
+    stack<int> st;
+    int n = arr.size();
+    vector<int> ans(n);
+    int a;
+    for(int j=0;j<n;j++){
+        int i = check ? n-1-j : j;
+        if(st.empty()) a= check ? n-1 : 0;
+        else{
+            while((!st.empty())&&(arr[st.top()]>=arr[i])) st.pop();
+            if(st.empty()) a= check ? n-1 : 0;
+            else a = check ? st.top()-1 : st.top()+1;
+        }
+        st.push(i);
+        if(i<(n)) ans[i]=a;
+    }
+    return ans;
+}
+int largestRectangleArea(vector<int>& heights) {
+    vector<int> a = smallerElements(heights,0);
+    vector<int> b = smallerElements(heights,1);
+    int ans = INT_MIN,n= heights.size();
+    for(int i = 0;i<n;i++){
+        ans = max(ans,(b[i]-a[i]+1)*heights[i]);
+    }
+    putl(ans);
+    return ans;
+}
+
+vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+    vector<int> ans;
+    deque<int> dq;
+    int n = nums.size();
+    for(int i=0;i<k;i++){
+        if(dq.empty()) dq.push_back(i);
+        else{
+            while((!dq.empty())&&(nums[dq.back()]<=nums[i])) dq.pop_back();
+            dq.push_back(i);
+        }
+    }
+    ans.push_back(nums[dq.front()]);
+    int j=k;
+    while(j<n){
+        if(dq.front()==j-k) dq.pop_front();
+        while((!dq.empty())&&(nums[dq.back()]<=nums[j])) dq.pop_back();
+        dq.push_back(j);
+        ans.push_back(nums[dq.front()]);
+        j++;
+    }
+    outputv(ans,ans.size());
+    return ans;
+}
+
+class MinStack {
+public:
+    stack<long long> st;
+    long long min;
+    MinStack() {
+        min = INT_MAX;
+    }
+    
+    void push(int value) {
+        long long val = value;
+        if(val<min){
+            st.push(2*val*1LL - min);
+            min = val;
+        }else{
+            st.push(val);
+        }
+    }
+    
+    void pop() {
+        if(st.empty()) cout<<"stack is empty."<<endl;
+        else{
+            long long val = st.top();
+            if(min<val) st.pop();
+            else{
+                min = 2*min - val;
+                st.pop();
+            }
+        }
+    }
+    
+    int top() {
+        if(st.empty()) return -1;
+        else{
+            long long val = st.top();
+            if(min<val) return val;
+            else{
+                return min;
+            }
+        }
+    }
+    
+    int getMin() {
+        return min;
+    }
+};
+
+int orangesRotting(vector<vector<int>>& grid) {
+    int n = grid.size(),m=grid[0].size();
+    int zeroes = 0;
+    queue<long long> q;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(grid[i][j]==0) zeroes++;
+            else if(grid[i][j]==2) q.push(i*m+j);
+            else continue;
+        }
+    }
+    vector<vector<bool>> visited(n,vector<bool> (m,false));
+    int ans=-1;
+    while(!q.empty()){
+        ans++;
+        int qsz=q.size();
+        bool jani=false;
+        for(int i=0;i<qsz;i++){
+            long long u = q.front();
+            int a = u/m,b=u%m;
+            q.pop();
+            // putl(a,b,ans);
+            if(visited[a][b]) continue;
+            else jani=true;
+            for(int k=0;k<4;k++){
+                if(check(a+dx[k],b+dy[k],n,m,grid)&&!visited[a+dx[k]][b+dy[k]]) q.push((a+dx[k])*m+(b+dy[k]));
+            }
+            visited[a][b]=true;
+            zeroes++;
+        }
+        if(!jani) ans--;
+    }
+    if(zeroes==n*m) return ans;
+    else return -1;
+}
+
+vector<int> dx = {1,-1,0,0};
+vector<int> dy = {0,0,1,-1};
+
+bool check(int i,int j,int n,int m,vector<vector<int>> &grid,vector<vector<bool>> &visited){
+    // putl("check",i,j,n,m);
+    // if((i<n)&&(i>=0)&&(j<m)&&(j>=0)) putl(grid[i][j],visited[i][j]);
+    return ((i<n)&&(i>=0)&&(j<m)&&(j>=0)&&(grid[i][j]==0)&&!(visited[i][j]));
+}
+
+vector<int> nearestHotel(vector<vector<int> > &grid,vector<vector<int>> &B) {
+    int n = grid.size(),m=grid[0].size();
+    vector<vector<int>> dist(n,vector<int> (m,INT_MAX));
+    vector<vector<bool>> visited(n,vector<bool> (m,false));
+    queue<long long> q;
+    for(int i=0;i<n;i++){
+        for(int j=0;j<m;j++){
+            if(grid[i][j]==1) {q.push(i*m+j);dist[i][j]=0;}
+            else continue;
+        }
+    }
+    while(!q.empty()){
+        long long u = q.front();
+        int a=u/m,b=u%m;
+        q.pop();
+        // putl(a,b);
+        if(visited[a][b]) continue;
+        for(int k=0;k<4;k++){
+            if(check(a+dx[k],b+dy[k],n,m,grid,visited)) {
+                dist[a+dx[k]][b+dy[k]] = min(dist[a+dx[k]][b+dy[k]],dist[a][b]+1);
+                q.push((a+dx[k])*m+(b+dy[k]));
+            }
+        }
+        visited[a][b]=true;
+    }
+    vector<int> ans;
+    for(int i=0;i<B.size();i++){
+        ans.push_back(dist[B[i][0]-1][B[i][1]-1]);
+    }
+    return ans;
+}
+
+
+string non_repeat(string A) {
+    queue<char> q;
+    unordered_map<char,int> mp;
+    int n=A.length();
+    string ans = "";
+    for(int i=0;i<n;i++){
+        q.push(A[i]);
+        mp[A[i]]++;
+        while(!q.empty()&&(mp[q.front()]>1)) q.pop();
+        if(q.empty()) ans+='#';
+        else ans+= q.front(); 
+    }
+
+    return ans;
+}
+
+
+void solve(){
+    vector<vector<int>> grid ={{0,0},{1,0}};
+    nearestHotel(grid);
+}
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);cout.tie(0);
+    int t=1;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
