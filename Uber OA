@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+template<typename... T>
+void see(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void put(T&&... args) { ((cout << args << " "), ...);}
+template<typename... T>
+void putl(T&&... args) { ((cout << args << " "), ...); cout<<'\n';}
+#define seea(a,x,y) for(int i=x;i<y;i++){cin>>a[i];}
+#define inputv(v,n) for(int i=0;i<n;i++){int x; cin>>x; v.push_back(x);}
+#define outputv(v,n) for(int i=0;i<n;i++){cout<<v[i]<<" ";}
+#define sees(s,n) for(int i=0;i<n;i++){int x; cin>>x; s.insert(x);}
+#define all(x) x.begin(),x.end()
+#define rep(i,a,b) for (int i=a; i<b; ++i)
+#define rev(i,a,b) for (int i=a; i>b; --i)
+#define pb push_back
+#define ar array
+#define sz size
+#define rsz resize
+typedef long long int ll;
+typedef pair<int,int> pi;
+typedef pair<int,ll> pl;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+const int MAXN=2e5+5;
+const ll INF = LLONG_MAX;
+const int MOD=1e9+7;
+
+
+void solve(){
+    int n,k;
+    see(n,k);
+    vector<pair<int,int>> a;
+    for(int i=0;i<n;i++){
+        int u,v;
+        see(u,v);
+        a.push_back({v,u});
+    }
+    sort(a.begin(),a.end());
+    rep(i,0,n) putl(a[i].first,a[i].second);
+    multiset<int> st1;
+    multiset<int,greater<int>> st2;
+    for(int i=0;i<n;i++) {
+        st1.insert(a[i].second);
+        st2.insert(a[i].second);
+    }
+    int ans = 0;
+    for(int i=0;(i<n-k+1);i++){
+        putl(a[i].first);
+        int sol=0;
+        int b=0,c=0;
+        multiset<int>::iterator it1=st1.begin();
+        multiset<int>::iterator it2=st1.end();
+        it2--;
+        for(int j=0;j<((k+1)/2);j++){
+            b+=*it2;
+            putl(b,*it2);
+            it2--;
+        }
+        for(int j=0;j<(k/2);j++){
+            c+=*it1;
+            it1++;
+        }
+
+        sol = (b-c)*a[i].first;
+        st1.erase(st1.find(a[i].second));
+        st2.erase(st2.find(a[i].second));
+        ans = max(ans,sol);
+    }
+    putl(ans);
+}
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);cout.tie(0);
+    int t=1;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+
+
+
+TASK :- https://leetcode.com/discuss/interview-question/1845128/Uber-Software-Engineer-India-(University)-2022-Graduates-Coding-Test
