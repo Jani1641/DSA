@@ -83,4 +83,86 @@ int main(){
 
 
 
-TASK :- https://leetcode.com/discuss/interview-question/1845128/Uber-Software-Engineer-India-(University)-2022-Graduates-Coding-Test
+TASK 1 :- https://leetcode.com/discuss/interview-question/1845128/Uber-Software-Engineer-India-(University)-2022-Graduates-Coding-Test
+
+
+#include<bits/stdc++.h>
+using namespace std;
+
+template<typename... T>
+void see(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void put(T&&... args) { ((cout << args << " "), ...);}
+template<typename... T>
+void putl(T&&... args) { ((cout << args << " "), ...); cout<<'\n';}
+#define seea(a,x,y) for(int i=x;i<y;i++){cin>>a[i];}
+#define inputv(v,n) for(int i=0;i<n;i++){int x; cin>>x; v.push_back(x);}
+#define outputv(v,n) for(int i=0;i<n;i++){cout<<v[i]<<" ";}
+#define sees(s,n) for(int i=0;i<n;i++){int x; cin>>x; s.insert(x);}
+#define all(x) x.begin(),x.end()
+#define rep(i,a,b) for (int i=a; i<b; ++i)
+#define rev(i,a,b) for (int i=a; i>b; --i)
+#define pb push_back
+#define ar array
+#define sz size
+#define rsz resize
+typedef long long int ll;
+typedef pair<int,int> pi;
+typedef pair<int,ll> pl;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+const int MAXN=2e5+5;
+const ll INF = LLONG_MAX;
+const int MOD=1e9+7;
+
+
+void solve(){
+    int n,k;
+    string s;
+    see(n,k,s);
+    int a=0;
+    vector<int> prep;
+    rep(i,0,n){
+        if(s[i]=='1') a++;
+        prep.push_back(a);
+    }
+    int start=0,end=0;
+    int noOfSeq=0,ans=INT_MAX,noOfzeroes,noOfOnes;
+    while(end<=n){
+        if(start==end) {
+            noOfSeq=0;
+            noOfzeroes = (s[start]=='0')  ? 1 : 0;
+            noOfOnes = (s[start]=='1') ? 1 : 0;
+        }else{
+            if(s[end]=='1') {
+                noOfSeq+=noOfzeroes;
+                noOfOnes++;
+            }
+            else noOfzeroes++;
+        }
+        if(noOfSeq<k) end++;
+        else{
+            ans= min(ans,end-start+1);
+            if(s[start]=='1') noOfOnes--;
+            else {
+                noOfzeroes--;
+                noOfSeq-=noOfOnes;
+            }
+            start++;
+        }
+        putl(start,end,noOfSeq,noOfzeroes,noOfOnes,ans);
+    }
+    putl(ans);
+}
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);cout.tie(0);
+    int t=1;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+
+TASK 2:-
