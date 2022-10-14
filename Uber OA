@@ -27,7 +27,7 @@ const int MAXN=2e5+5;
 const ll INF = LLONG_MAX;
 const int MOD=1e9+7;
 
-
+// change github.com to github.dev to open in vscode online
 void solve(){
     int n,k;
     see(n,k);
