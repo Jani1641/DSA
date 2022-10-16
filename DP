@@ -1,0 +1,136 @@
+
+int dp[MAXN];
+
+int helper(int n){
+    if(n<0) return 0;
+    if(dp[n]!=-1) return dp[n];
+    else{
+        if((n==1)||(n==0)) return dp[n]=1;
+        else return dp[n]=helper(n-1)+helper(n-2);
+    }
+}
+
+void solve(){
+    int n;
+    see(n);
+    fill_n(dp,n+1,-1);
+    for(int i=0;i<=n;i++){
+        if((i==0)||(i==1)) dp[i]=1;
+        else{
+            dp[i]=dp[i-1]+dp[i-2];
+        }
+    }
+    putl(helper(n));
+    return ;
+}
+
+vector<int> getRow(int n) {
+        vector<int> res(n+1);
+        res[0] = res[n] = 1;
+        long temp = 1;
+        int up = n, down = 1;
+        for(int i = 1; i < n; i++) {
+            temp = temp * up /down;
+            res[i] = temp;
+            up--;down++;
+        }
+        return res;
+    }
+    
+    
+Space optimization
+	vector<int> getRow(int rowIndex) {
+      vector<int> dp(rowIndex+1, 1);
+      if(rowIndex <= 1) return dp;
+      for(int i = 2; i <= rowIndex; i++) {
+          for(int j = i-1; j >= 1; j--) {
+              dp[j] = dp[j] + dp[j-1];
+          }
+      }
+      return dp;
+  }
+  
+  
+vector<int> getRow(int n) {
+    vector<int> res(n+1);
+    res[0] = res[n] = 1;
+    long temp = 1;
+    int up = n, down = 1;
+    for(int i = 1; i < n; i++) {
+        temp = temp * up /down;
+        res[i] = temp;
+        up--;down++;
+    }
+    return res;
+}
+
+    vector<int> dp;
+    dp.resize(n+1,0);
+    int a=-1;
+    for(int i=1;i<=n;i++){
+         if((i&(i-1)) == 0){
+            a++;
+            dp[i]=1;
+         } 
+         else{
+            dp[i] = 1+dp[i-(1<<a)];
+         }
+    }
+    return dp ;
+    
+    
+bool isSubsequence(string s, string t) {
+      int n=s.length(),m=t.length();
+      int i=0,j=0;
+      while(j<m){
+          if(s[i]==t[j]) i++;
+          j++;
+      }
+      return (i==n) ;
+  }
+  
+vector<int> dp;
+
+int helper(vector<int> &cost,int i){
+    if(i<0) return INT_MAX;
+    if((i==0)||(i==1)) return dp[i]=0;
+    if(dp[i]!=-1) return dp[i];
+    return dp[i]=min(helper(cost,i-1)+cost[i-1],helper(cost,i-2)+cost[i-2]);
+}
+
+int minCostClimbingStairs(vector<int>& cost) {
+    int n=cost.size();
+    dp.resize(n+1,-1);
+    int ans= helper(cost,n);
+    // outputv(dp,dp.size());
+    return ans;
+}
+
+bool canJump(vector<int>& nums) {
+      int i = 0, n = nums.size();
+      for(int reach = 0; i < n && i <= reach; i++)
+          reach = max(reach, nums[i] + i);
+      return i == n;
+  }]
+  
+  
+
+int helper(vector<int> &nums,int x,int n,vector<int> &dp){
+    if(x==nums.size()) return dp[x]=0;
+    if(dp[x]!=-1) return dp[x];
+
+    int reach=x+nums[x-1],mini=1e9;
+    for(int i=x+1;i<=min(reach,n);i++){
+        int val=1+helper(nums,i,n,dp);
+        mini=min(mini,val);
+    }
+    return dp[x]=mini;
+}
+
+
+int jump(vector<int>& nums) {
+    int n=nums.size();
+    vector<int> dp(n+1,-1);
+    int ans = helper(nums,1,n,dp);
+    return ans;
+}       
