@@ -1,0 +1,37 @@
+
+string s;
+int dp[10][20][2];
+
+int helper(int pos,int cnt,int tight){
+	if(pos==s.size()) return cnt;
+	if(dp[pos][cnt][tight]!=-1) return dp[pos][cnt][tight];
+	int ans=0;
+	int lim = (tight) ?  s[pos]-'0' : 9;
+	for(int i=0;i<=lim;i++){
+		ans+=(helper(pos+1,cnt+(i==1),tight&(lim==i)));
+	}
+	return dp[pos][cnt][tight]=ans;
+}
+
+int countDigitOne(int n) {
+	s=to_string(n);
+	return helper(0,0,1);
+}
+
+void solve(){
+	int n;
+	cin>>n;
+	memset(dp,-1,sizeof(dp));
+	cout<<(countDigitOne(n))<<" jani"<<endl;
+}
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);cout.tie(0);
+    int t=1;
+    // cin>>t
+    while(t--){
+        solve();
+    }
+    return 0;
+}
