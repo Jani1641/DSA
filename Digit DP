@@ -126,3 +126,38 @@ int numDupDigitsAtMostN(int n) {
 	memset(dp,-1,sizeof(dp));
     return helper(0,0,0,0,1);
 }
+
+
+string s;
+int dp[10][94][2];
+int tlen;
+
+int helper(int pos,int diff,int tight){
+	if(pos==s.length()) return (diff==47);
+	if(dp[pos][diff][tight]!=-1) return dp[pos][diff][tight];
+	int lim = (tight) ? s[pos]-'0' : 9;
+	int ans=0;
+	for(int i=0;i<=lim;i++){
+		int new_diff;
+		if(((tlen-pos)%2)==0) new_diff=diff+i;
+		else new_diff=diff-i;
+		ans+=helper(pos+1,new_diff,tight&&(i==lim));
+	}
+	return dp[pos][diff][tight]=ans;
+}	
+
+void solve(){
+	int n;
+	cin>>n;
+	memset(dp,-1,sizeof(dp));
+	s=to_string(n);
+	tlen=s.len();
+	int a=helper(0,46,1);
+	memset(dp,-1,sizeof(dp));
+	int m;
+	cin>>m;
+	s=to_string(m-1);
+	tlen=s.len();
+	int b=helper(0,46,1);
+	cout<<a-b<<endl;
+}
