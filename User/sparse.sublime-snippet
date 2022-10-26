@@ -1,0 +1,67 @@
+<snippet>
+	<content><![CDATA[
+// Answer range query for static array
+// Time complexity: O(nlogn) construction, O(logn) query
+// Can be modified to be O(1) query for some queries (i.e minimum/maximum, gcd)
+//updation not possible
+
+
+const int K=25;
+const int MAXT=1e7;
+
+int n,q;
+vector<int> arr;
+vector<vi> dp(MAXT+1,vi(K+1));
+
+void build_sparse_table(){
+	for(int i=1;i<=n;i++){
+		dp[i][0]=arr[i];
+	}
+	rep(i,1,K){
+		for(int j=1;j+(1<<i)<=n+1;j++){
+			dp[j][i]=min(dp[j][i-1],dp[j+(1<<(i-1))][i-1]);
+			//dp[j][i]=dp[j][i-1]^dp[j+(1<<(i-1))][i-1];
+		}
+	}
+}
+int lg(int x) {
+    return 32 - __builtin_clz(x) - 1;
+}
+
+int min_query(int l,int r){
+	int len=r-l+1;
+	len=lg(len);;
+	return (min(dp[l][len],dp[r-(1<<len)+1][len]));
+}
+
+int xor_query(int l,int r){
+	int len=r-l+1,ans=0;
+	for(int i=0;i<=K;i++){
+		if(len & (1<<i)){
+			ans^=dp[l][i];
+			l+=(1<<i);
+		} 
+	}
+	return ans;
+}
+
+void solve(){
+	see(n,q);
+	arr.resize(n);
+	rep(i,1,n+1){
+		cin>>arr[i];
+	}
+	build_sparse_table();
+	rep(i,1,4+1){
+		rep(j,0,3) put(dp[i][j]);
+		cout<<"\n";
+	}
+	cout<<min_query(2,4);
+}
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>sparse</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

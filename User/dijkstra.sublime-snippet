@@ -1,0 +1,89 @@
+<snippet>
+	<content><![CDATA[
+const int MAXN=1e5+5;
+typedef long long int ll;
+const ll INF = LLONG_MAX;
+#define pb push_back
+typedef pair<int,int> pi;
+typedef pair<int,ll> pl;
+
+int n,m;
+vector<pair<int,int>> adj[MAXN];
+vector<ll> dist;
+
+
+struct Compare {
+    bool operator()(pair<int,ll> a, pair<int,ll> b) {
+        return a.second > b.second;
+    }
+};
+
+//no -ve edge
+//both directed and undirected graphs
+void solve(){
+	cin>>n>>m;
+	for(int i=0;i<m;i++){
+		int u,v,w;
+		cin>>u>>v>>w;
+		adj[u].pb({v,w});
+	}
+	dist.assign(n+1,INF);
+	int start=1;
+	priority_queue<pl,vector<pl>,Compare> q;
+	q.push({start,0});
+	dist[start]=0;
+	while(!q.empty()){
+		pi u = q.top();
+		q.pop();
+		for(auto x: adj[u.first]){
+			if(dist[x.first]>dist[u.first]+x.second){
+				dist[x.first] = dist[u.first]+x.second;
+				q.push({x.first,dist[x.first]});
+			}
+		}
+	}
+	rep(i,1,n+1) cout<<dist[i]<<" ";
+}
+
+
+
+
+vector<vector<int>> dist,visited;
+vector<vector<int>> adj;
+
+vector<int> x = {1,2,1,2,-1,-2,-1,-2};
+vector<int> y = {2,1,-2,-1,2,1,-2,-1};
+
+bool check(int i,int j,int A,int B){
+	return (i>0 && j>0 && i<=A && j<=B);
+}
+int solve(int A, int B, int C, int D, int E, int F){
+	adj.clear();dist.clear();visited.clear();
+	dist.resize(A+1,vector<int> (B+1,INT_MAX));
+	visited.resize(A+1,vector<int> (B+1,false));
+	queue<array<int,2>> q;
+	q.push({C,D});
+	dist[C][D]=0;
+	while(!q.empty()){
+		auto u = q.front();
+		q.pop();
+		if(visited[u[0]][u[1]]) continue;
+		visited[u[0]][u[1]]=true;
+		for(int i=0;i<8;i++){
+			if(check(u[0]+x[i],u[1]+y[i],A,B)){
+				if(visited[u[0]+x[i]][u[1]+y[i]]) continue;
+				dist[u[0]+x[i]][u[1]+y[i]] = min(dist[u[0]+x[i]][u[1]+y[i]],dist[u[0]][u[1]]+1);
+				q.push({u[0]+x[i],u[1]+y[i]});
+			}
+		}
+	}
+	if(visited[E][F])  return dist[E][F];
+	else  return -1;
+}
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>dijkstra</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

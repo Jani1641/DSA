@@ -1,0 +1,13 @@
+<snippet>
+	<content><![CDATA[
+vector<int> prefixSum(n+1,0);
+for(int i=1;i<=n;i++){
+	prefixSum[i]+=a[i-1]+prefixSum[i-1];
+
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>prefixSum</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

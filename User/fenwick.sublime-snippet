@@ -1,0 +1,48 @@
+<snippet>
+	<content><![CDATA[
+#define LSOne(S) ((S) & (-S))
+
+int n,q;
+ll ft[MAXN];
+
+ll sum(int x){
+	ll res=0;
+	while(x>=1){
+		res+=ft[x];
+		x-=LSOne(x);
+	}
+	return res;
+}
+
+void update(int k , int x){
+	while(k<=n){
+		ft[k]+=x;
+		k+=LSOne(k);
+	}
+}
+
+ll rsq(int l,int r){
+	return sum(r)-sum(l-1);
+}
+
+
+void solve(){
+	cin>>n>>q;
+	vector<ll> a(n+1);
+	memset(ft,0,sizeof(ft));
+	for(int i=1;i<=n;i++){
+		int u;cin>>u;
+		a[i]=u;
+		update(i,u);
+		rep(j,1,n+1) cout<<ft[j]<<" ";
+		cout<<"\n";
+	}
+		
+	cout<<rsq(3,4);
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>fenwick</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

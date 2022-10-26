@@ -1,0 +1,83 @@
+<snippet>
+	<content><![CDATA[
+int n,q;
+vi st,lazy,arr;
+
+
+void build(int start,int end,int node){
+	if(start==end){
+		st[node]=arr[end];
+		return;
+	}
+	int mid=start+(end-start)/2;
+	build(start,mid,2*node);
+	build(mid+1,end,2*node+1);
+	st[node]=st[2*node]+st[2*node+1];
+}
+
+void update(int start,int end,int l,int r,int val,int node){
+	if(lazy[node]!=0){
+		st[node]=(end-start+1)*lazy[node];
+		if(start!=end){
+			lazy[2*node]+=lazy[node];
+			lazy[2*node+1]+=lazy[node];
+		}
+		lazy[node]=0;
+	}
+	if(end<l || start>r) return;
+
+	if(start>=l && end<=r) {
+		st[node]+=(end-start+1)*val;
+		if(start!=end){
+			lazy[2*node]+=val;
+			lazy[2*node+1]+= val;
+		}
+		return;
+	}
+	int mid=start+(end-start)/2;
+	update(start,mid,l,r,val,2*node);
+	update(mid+1,end,l,r,val,2*node+1);
+	st[node]=st[2*node]+st[2*node+1];
+}
+
+int query(int start,int end,int l,int r,int node){
+	if(lazy[node]!=0){
+		st[node]=(end-start+1)*lazy[node];
+		if(start!=end){
+			lazy[2*node]+=lazy[node];
+			lazy[2*node+1]+=lazy[node];
+		}
+		lazy[node]=0;
+	}
+	if(end<l || start>r) return 0;
+	if(start<=l && r>=end) return st[node];
+	int mid = start+(end-start)/2;
+	int left = query(start,mid,l,r,2*node);
+	int right = query(mid+1,end,l,r,2*node+1);
+	return left+right;
+}
+
+void solve(){
+	see(n,q);
+	st.resize(4*n+1);lazy.resize(4*n+1,0);arr.resize(n+1);
+	rep(i,1,n+1) see(arr[i]);
+	build(1,n,1);
+	while(q--){
+		int t;see(t);
+		if(t==1){
+			int l,r;see(l,r);
+			cout<<query(1,n,l,r,1)<<endl;
+		}else {
+			int u,v,w;see(u,v,w);
+			update(1,n,u,v,w,1);
+		}
+	}
+
+}
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>lazyseg</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

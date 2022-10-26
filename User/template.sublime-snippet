@@ -1,0 +1,50 @@
+<snippet>
+	<content><![CDATA[
+#include<bits/stdc++.h>
+using namespace std;
+
+template<typename... T>
+void see(T&... args) { ((cin >> args), ...);}
+template<typename... T>
+void put(T&&... args) { ((cout << args << " "), ...);}
+template<typename... T>
+void putl(T&&... args) { ((cout << args << " "), ...); cout<<'\n';}
+#define seea(a,x,y) for(int i=x;i<y;i++){cin>>a[i];}
+#define inputv(v,n) for(int i=0;i<n;i++){int x; cin>>x; v.push_back(x);}
+#define outputv(v,n) for(int i=0;i<n;i++){cout<<v[i]<<" ";}
+#define sees(s,n) for(int i=0;i<n;i++){int x; cin>>x; s.insert(x);}
+#define all(x) x.begin(),x.end()
+#define rep(i,a,b) for (int i=a; i<b; ++i)
+#define rev(i,a,b) for (int i=a; i>b; --i)
+#define pb push_back
+#define ar array
+#define sz size
+#define rsz resize
+typedef long long int ll;
+typedef pair<int,int> pi;
+typedef pair<int,ll> pl;
+typedef vector<int> vi;
+typedef vector<ll> vl;
+const int MAXN=2e5+5;
+const ll INF = LLONG_MAX;
+const int MOD=1e9+7;
+
+
+
+
+int main(){
+    ios::sync_with_stdio(0);
+    cin.tie(0);cout.tie(0);
+    int t=1;
+    while(t--){
+        solve();
+    }
+    return 0;
+}
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>template</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

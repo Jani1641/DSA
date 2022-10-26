@@ -1,0 +1,61 @@
+<snippet>
+	<content><![CDATA[
+#define pb push_back
+const int MAXN = 1e5+6;
+
+int n,m;
+vector<int> link,size;
+vector<array<int,3>> edges;
+
+int find(int x) {
+	while (x != link[x]) x = link[x];
+	return x;
+}
+
+bool same(int a, int b) {
+	return find(a) == find(b);
+}
+
+void unite(int a, int b) {
+	a = find(a);
+	b = find(b);
+	if (size[a] < size[b]) swap(a,b);
+	size[a] += size[b];
+	link[b] = a;
+}
+
+void kruskal(){
+	sort(edges.begin(),edges.end());
+	int cost =0,count=0;
+	for(int i=0;i<m;i++){
+		int w =edges[i][0],u=edges[i][1],v=edges[i][2];
+		if(!same(u,v)){
+			unite(u,v);
+			cost+=w;
+			count++;
+		}
+	}
+	if (count == n-1) cout << cost << "\n";
+    else cout << "IMPOSSIBLE\n";
+	cout<<cost<<" "<<count<<endl;
+}
+
+void solve(){
+	cin>>n>>m;
+	for(int i=0;i<m;i++){
+		int u,v,w;
+		cin>>u>>v>>w;
+		edges.pb({w,u,v});
+	}
+	size.assign(n+1,1);
+	for(int i=0;i<=n;i++) link.push_back(i);
+	kruskal();
+
+}
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>kruskal</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

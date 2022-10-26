@@ -1,0 +1,38 @@
+<snippet>
+	<content><![CDATA[
+const int MAXN=1e5+5;
+#define pb push_back
+
+int n,m,visited[MAXN]={0};
+vector<int> adj[MAXN];
+vector<int> revList;
+
+
+void dfs(int u,int p=-1){
+	visited[u]=1;
+	for(auto v: adj[u]){
+		if(!visited[v]) dfs(v,u);
+	}
+	revList.pb(u);
+}
+
+
+void solve(){
+	cin>>n>>m;
+	for(int i=0;i<m;i++){
+		int u,v;
+		cin>>u>>v;
+		adj[u].pb(v);
+	}
+	for(int i=1;i<=n;i++){
+		if(!visited[i]) dfs(i);
+	}
+	reverse(revList.begin(), revList.end());
+	for(auto x: revList) cout<<x<<" ";
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>topo</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

@@ -1,0 +1,59 @@
+<snippet>
+	<content><![CDATA[
+struct ListNode
+{
+	int val;
+	ListNode * next;
+
+	ListNode(int a){
+		val=a;next=NULL;
+	}
+
+	ListNode(int a,ListNode* b){
+		val=a;next=b;
+	}
+};
+
+void printList(ListNode * head){
+	while(head){
+		cout<<head->val<<" ";
+		head = head->next;
+	}
+	return;
+}
+ListNode* reverse(ListNode* start){
+	if(!start && !start->next) return start;
+	ListNode* prev = NULL,*curr = start,*after = start->next;
+	while(curr){
+		curr->next=prev;
+		prev=curr;
+		curr=after;
+		if(after) after=after->next;
+	}
+	return prev;
+}
+int Length(ListNode* node){
+	int ans=0;
+	while(node){
+		node=node->next;
+		ans++;
+	}
+	return ans;
+}
+void rever(ListNode* before,ListNode* start,ListNode *end,ListNode* last){
+	ListNode* prev=last,*curr=start,*after=start->next;
+	while(curr!=end){
+		curr->next=prev;
+		prev=curr;
+		curr=after;
+		after=after->next;
+	}
+	curr->next=prev;
+	before->next=curr;
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>Linked</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

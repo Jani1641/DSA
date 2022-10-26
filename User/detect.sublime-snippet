@@ -1,0 +1,62 @@
+<snippet>
+	<content><![CDATA[
+const int MAXN = 1e5+5;
+const int inf = INT_MAX;
+
+int n,m,visited[MAXN],parent[MAXN],sc,ec;
+vector<int> adj[MAXN];
+
+bool dfs(int u,int p=-1){
+	visited[u]=1;
+	parent[u]=p;
+	for(auto x:adj[u]){
+		if(x==p) continue;
+		if(visited[x]==1){
+			sc=x;ec=u;
+			return true;
+		}
+		if(!visited[x]){
+			if(dfs(x,u)) return true;
+		}
+	}
+	visited[u]=2;
+	return false;
+}
+
+
+bool cycle_detect(){
+	rep(i,1,n+1){
+		if(!visited[i] && dfs(i,-1)) return true;
+	}
+	return false;
+}
+
+void solve(){
+	see(n,m);
+	for(int i=0;i<n;i++){
+		int u,v;see(u,v);
+		adj[u].pb(v);
+		adj[v].pb(u);
+	}
+	vector<int> ans;
+	bool a=cycle_detect();
+	if(!a) cout<<"IMPOSSIBLE"<<endl;
+	else{
+		int u=ec;
+		ans.pb(sc);
+		while(u!=sc){
+			ans.pb(u);
+			u=parent[u];
+		}
+		ans.pb(sc);
+		cout<<ans.size()<<endl;
+		for(int i=ans.size()-1;i>=0;i--) cout<<ans[i]<<" ";
+		cout<<"\n";
+	}
+}
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>cycle</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>

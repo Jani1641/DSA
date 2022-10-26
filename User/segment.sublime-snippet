@@ -1,0 +1,60 @@
+<snippet>
+	<content><![CDATA[
+// Segment tree for range minimum query, point set update
+
+int n,q;
+vi arr,st;
+
+void update(int node,int start,int end,int idx,int val){
+	if(start==end) {
+		arr[idx]=val;
+		st[node]=val;
+		return;
+	}
+	int mid = start+(end-start)/2;
+	if (idx <= mid) update(2 * node, start, mid, idx, val);
+    else update(2 * node + 1, mid + 1, end, idx, val);
+    st[node]=min(st[2*node],st[2*node+1]);
+}
+
+void build(int start,int end,int node){
+	if(start==end){
+		cout<<"yes"<<" "<<start<<" " <<node;
+		cout<<"\n";
+		st[node]=arr[start];
+		return;
+	}
+	int mid =start+(end-start)/2;
+	cout<<mid<<endl;
+	build(start,mid,2*node);
+	build(mid+1,end,2*node+1);
+	st[node]=min(st[2*node],st[2*node+1]);
+}
+
+int query(int start,int end,int l,int r,int node){
+	if(start>r || end<l) return INT_MAX;
+	if(l<=start && end<=r) return st[node];
+	int mid = start+(end-start)/2;
+	return(min(query(start,mid,l,r,2*node),query(mid+1,end,l,r,2*node+1)));
+}
+
+void solve(){
+	see(n,q);
+	arr.resize(n);
+	st.resize(4*n);
+	rep(i,1,n+1) cin>>arr[i];
+	build(1,n,1);
+	while(q--){
+		rep(i,1,4*n) cout<<st[i]<<" ";
+		cout<<"\n";
+		update(1,1,n,4,2);
+		cout<<query(1,n,3,4,1);
+	}
+}
+
+]]></content>
+	<!-- Optional: Set a tabTrigger to define how to trigger the snippet -->
+	<tabTrigger>segment</tabTrigger>
+	<!-- Optional: Set a scope to limit where the snippet will trigger -->
+	<scope>source.c++</scope>
+</snippet>
