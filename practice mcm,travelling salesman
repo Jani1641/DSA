@@ -1,0 +1,76 @@
+int dp[505][505];
+// bool dp2[505][505];
+
+// int helper(string& A,int i, int j){
+// 	if(i>j) return 0;
+// 	if(dp2[i][j]) return 0;
+// 	if(dp[i][j]!=-1) return dp[i][j];
+// 	int ans=INT_MAX;
+// 	for(int k=i;k<j;k++){
+// 		if(dp2[i][k]){
+// 			ans=min(ans,helper(A,k+1,j)+1);
+// 		}	
+// 	}
+// 	return dp[i][j]=ans;
+// }
+
+// int minCut(string A) {
+// 	memset(dp2,false,sizeof(dp2));
+// 	memset(dp,-1,sizeof(dp));
+// 	int n=A.length();
+// 	for(int gap=0;gap<n;gap++){
+// 		for(int i=0;(i+gap)<n;i++){
+// 			if(gap==0) dp2[i][i+gap]=true;
+// 			else if(gap==1) dp2[i][i+gap]=(A[i]==A[i+gap]) ? true : false;
+// 			else{
+// 				dp2[i][i+gap]=(A[i]==A[i+gap]) ? dp2[i+1][i+gap-1] : false;
+// 			}
+// 		}
+// 	}
+// 	return helper(A,0,n-1);
+// }
+// // const int MOD=1e9+7;
+
+// // int helper(int k,int n,int m){
+// // 	k%=m;
+// // 	int res=1;
+// // 	while(n>0){
+// // 		if(n&1){
+// // 			res= (res*k)%m;
+// // 		}
+// // 		k=(k*k)%m;
+// // 		n=n>>1;
+// // 	}
+// // 	return res%m;
+// // }
+
+// // int answer(int s,int n,int m){
+// // 	int ans1 = helper(s,n,10);
+// // 	int ans2 = helper(ans1,m,MOD);
+// // 	return ans2;
+// // }
+
+// int n=5,m=3;
+
+// void helper(vector<vector<int>> &A){
+// 	A.resize(n,vector<int>(m,-1));
+// }
+
+
+// void solve(){
+// 	vector<vector<int>> a[5];
+// 	for(int i=0;i<5;i++) helper(a[i]);
+// 	for(int i=0;i<5;i++){
+// 		for(int j=0;j<n;j++){
+// 			for(int k=0;k<m;k++){
+// 				cout<<a[i][j][k]<<" ";
+// 			}
+// 			cout<<endl;
+// 		}
+// 		cout<<endl;
+// 	}
+// 	// string A="aab";
+// 	// int ans=minCut(A);
+// 	// cout<<ans<<endl;
+// 	return;
+// }
